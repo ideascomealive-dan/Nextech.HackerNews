@@ -1,0 +1,11 @@
+<div>
+  <input [(ngModel)]="search" (input)="onSearchChange()" placeholder="Search stories..." />
+  <ul>
+    <li *ngFor="let story of stories">
+      <a *ngIf="story.url" [href]="story.url" target="_blank">{{ story.title }}</a>
+      <span *ngIf="!story.url">{{ story.title }} (No link)</span>
+    </li>
+  </ul>
+  <button (click)="prevPage()" [disabled]="page === 1">Previous</button>
+  <button (click)="nextPage()">Next</button>
+</div>
