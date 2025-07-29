@@ -18,11 +18,26 @@ builder.Services.AddMemoryCache();
 builder.Services.Configure<HackerNewsApiSettings>(
     builder.Configuration.GetSection("HackerNewsApi"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+builder.Services.AddScoped<ICacheProvider, MemoryCacheProvider>();
+
 builder.Services.AddHttpClient<IHackerNewsService, HackerNewsService>();
 
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+
+
+app.UseCors();
+
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

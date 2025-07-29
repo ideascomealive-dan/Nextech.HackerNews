@@ -1,11 +1,32 @@
-<div>
-  <input [(ngModel)]="search" (input)="onSearchChange()" placeholder="Search stories..." />
-  <ul>
+<div class="container">
+  <h1>📰 Latest Hacker News</h1>
+  <p>Discover the newest tech stories curated from Hacker News.</p>
+
+  <input class="search-input"
+         [(ngModel)]="search"
+         (input)="onSearchChange()"
+         placeholder="🔍 Search stories..." />
+
+  <div class="overlay-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <ul class="story-list" *ngIf="!isLoading">
     <li *ngFor="let story of stories">
       <a *ngIf="story.url" [href]="story.url" target="_blank">{{ story.title }}</a>
-      <span *ngIf="!story.url">{{ story.title }} (No link)</span>
+      <span *ngIf="!story.url">{{ story.title }} <i>(No link)</i></span>
     </li>
   </ul>
-  <button (click)="prevPage()" [disabled]="page === 1">Previous</button>
-  <button (click)="nextPage()">Next</button>
+
+  <p *ngIf="!isLoading && stories.length === 0" class="empty-state">
+    😕 No stories found. Try a different search!
+  </p>
+
+
+  <div class="pagination" *ngIf="!isLoading">
+    <button (click)="prevPage()" [disabled]="page === 1">Previous</button>
+    <span>Page {{ page }}</span>
+    <button (click)="nextPage()" [disabled]="isLoading">Next</button>
+  </div>
+
 </div>

@@ -12,7 +12,7 @@ namespace Nextech.HackerNews.Test
     {
         private readonly Mock<HttpMessageHandler> _mockHttpHandler;
         private readonly HttpClient _httpClient;
-        private readonly MemoryCache _memoryCache;
+        private readonly MemoryCacheProvider _memoryCache;
         private readonly HackerNewsService _service;
 
         public HackerNewsServiceTests()
@@ -23,7 +23,7 @@ namespace Nextech.HackerNews.Test
                 BaseAddress = new Uri("https://hacker-news.firebaseio.com/v0/")
             };
 
-            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+            _memoryCache = new MemoryCacheProvider( new MemoryCache(new MemoryCacheOptions()));
 
             var settings = Options.Create(new HackerNewsApiSettings
             {
@@ -40,10 +40,10 @@ namespace Nextech.HackerNews.Test
             var storyIds = new List<int> { 101, 102 };
 
             var storyData = new List<StoryDto>
-        {
-            new StoryDto { Title = "Story 1", Url = "http://example.com/1" },
-            new StoryDto { Title = "Story 2", Url = null }
-        };
+            {
+                new StoryDto { Title = "Story 1", Url = "http://example.com/1" },
+                new StoryDto { Title = "Story 2", Url = null }
+            };
 
             _mockHttpHandler.ReturnsJson($"{_httpClient.BaseAddress}newstories.json", storyIds);
             _mockHttpHandler.ReturnsJson($"{_httpClient.BaseAddress}item/101.json", storyData[0]);

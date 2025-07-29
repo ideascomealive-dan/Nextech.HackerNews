@@ -10,7 +10,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21027",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22017"
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22017",
+        "DEV_SERVER_PORT": "4200"
       }
     },
     "http": {
@@ -21,6 +22,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
+        "DEV_SERVER_PORT": "4200",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19022",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20071"
       }

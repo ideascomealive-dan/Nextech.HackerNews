@@ -1,3 +1,8 @@
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { Story } from "../models/story.model";
+
 @Injectable({ providedIn: 'root' })
 export class StoryService {
   constructor(private http: HttpClient) { }

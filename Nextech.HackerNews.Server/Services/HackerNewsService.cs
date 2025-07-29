@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Nextech.HackerNews.Server.Configurations;
 using Nextech.HackerNews.Server.Models;
 
@@ -8,12 +7,12 @@ namespace Nextech.HackerNews.Server.Services
     public class HackerNewsService : IHackerNewsService
     {
         private readonly HttpClient _httpClient;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheProvider _cache;
         private readonly string _baseUrl;
 
         public HackerNewsService(
             HttpClient httpClient,
-            IMemoryCache cache,
+            ICacheProvider cache,
             IOptions<HackerNewsApiSettings> settings)
         {
             _httpClient = httpClient;
@@ -21,16 +20,11 @@ namespace Nextech.HackerNews.Server.Services
             _baseUrl = settings.Value.BaseUrl;
         }
 
-        public async Task<List<StoryDto>> GetNewestStoriesAsync(int page, int pageSize, string search = "")
+        public async Task<List<StoryDto?>> GetNewestStoriesAsync(int page, int pageSize, string search = "")
         {
-            if (!_cache.TryGetValue("newstories", out List<int> storyIds))
-            {
-                var response = await _httpClient.GetFromJsonAsync<List<int>>($"{_baseUrl}newstories.json");
-                storyIds = response ?? new List<int>();
-                _cache.Set("newstories", storyIds, TimeSpan.FromMinutes(5));
-            }
+            var storyIds = await _cache.GetOrCreateAsync("newstories", async () => await _httpClient.GetFromJsonAsync<List<int>>($"{_baseUrl}newstories.json") ?? new List<int>());
 
-            var storiesToFetch = storyIds.Skip((page - 1) * pageSize).Take(pageSize);
+            var storiesToFetch = storyIds!.Skip((page - 1) * pageSize).Take(pageSize);
             var tasks = storiesToFetch.Select(id => _httpClient.GetFromJsonAsync<StoryDto>($"{_baseUrl}item/{id}.json"));
             var stories = (await Task.WhenAll(tasks)).Where(s => s != null).ToList();
 
